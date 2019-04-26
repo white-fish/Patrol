@@ -27,8 +27,11 @@ namespace Patrol
                 if(port.Contains('-'))
                 {
                     int[] pairSplited = Array.ConvertAll(port.Split('-'), s => int.Parse(s));
-                    for(int i = pairSplited[0]; i <= pairSplited[1]; i++)
-                        ports.Add(i);
+                    if (pairSplited[0] < pairSplited[1])
+                        for (int i = pairSplited[0]; i <= pairSplited[1]; i++)
+                            ports.Add(i);
+                    else
+                        throw new Exception("Wrong port input");
                 }
                 else
                     ports.Add(int.Parse(port));

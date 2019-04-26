@@ -14,25 +14,19 @@ namespace Patrol
         public static PortRange PortRange;
         public class Options
         {
-            [Option('p', "ports", Default = "20-25,11,12,12,12,100-112", HelpText = "Port list to scan")]
+            [Option('p', "ports", Default = "1", HelpText = "Port list to scan")]
             public string Ports { get; set; }
 
             [Option('r', "range", Default = "192.168.0.1/24", HelpText = "IP range to scan")]
             public string IpRange { get; set; }
+
+            [Option('t', "timeout", Default = 500, HelpText = "Timeout in mili sec")]
+            public int timeOut { get; set; }
         }
 
         private static void Run(Options options)
         {
-            // Checking ip input format
-            try
-            {
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine($"{e.Message} Check ip range input");
-            }
-
-            //Checking port input format
+            //Checking input errors
             try
             {
                 IpRange = IpRange.Parse(options.IpRange);
@@ -40,8 +34,10 @@ namespace Patrol
             }
             catch (Exception e)
             {
-                Console.WriteLine($"{e.Message} Check ports input");
+                Console.WriteLine(e.Message);
             }
+
+            Worker.Work(IpRange, PortRange, options.timeOut);
         }
 
         static void Main(string[] args)

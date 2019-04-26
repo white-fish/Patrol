@@ -58,7 +58,7 @@ namespace Patrol
 
                 var mask = byte.Parse(m.Groups[5].Value);
 
-                int upperAddr = (int)(ip | (uint.MaxValue >> mask));
+                int upperAddr = (int)(ip | (int)(uint.MaxValue >> mask));
 
                 return new IpRange(ip, upperAddr);
             }
