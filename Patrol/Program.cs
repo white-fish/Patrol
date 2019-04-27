@@ -14,7 +14,7 @@ namespace Patrol
         public static PortRange PortRange;
         public class Options
         {
-            [Option('p', "ports", Default = "1", HelpText = "Port list to scan")]
+            [Option('p', "ports", Default = "80,3306,443", HelpText = "Port list to scan")]
             public string Ports { get; set; }
 
             [Option('r', "range", Default = "192.168.0.1/24", HelpText = "IP range to scan")]

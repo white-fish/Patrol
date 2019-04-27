@@ -12,28 +12,17 @@ namespace Patrol
     {
         public static void Work(IpRange IpRange, PortRange PortRange, int timeOut)
         {
-
+            DateTime start = DateTime.Now;
             Console.WriteLine("Starting...");
-            foreach(IPAddress ip in IpRange)
+            Parallel.ForEach(IpRange, new ParallelOptions { MaxDegreeOfParallelism = 50 }, (ip) =>
             {
                 foreach (int port in PortRange)
                 {
-                    Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    socket.SendTimeout = timeOut;
-                    socket.ReceiveTimeout = timeOut;
-                    socket.SendTimeout = timeOut;
+                    Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
                     var result = socket.BeginConnect(ip, port, null, null);
                     bool success = result.AsyncWaitHandle.WaitOne(timeOut);
                     if (success)
                     {
-                        try
-                        {
-                            socket.EndConnect(result);
-                        }
-                        catch(Exception e)
-                        {
-                            Console.WriteLine(e.Message);
-                        }
                         Console.WriteLine($"Found port open {port} @ {ip.MapToIPv4().ToString()}");
                     }
                     else
@@ -41,8 +30,9 @@ namespace Patrol
                         socket.Close();
                     }
                 }
-            }
-            Console.WriteLine("Done");
+            });
+            DateTime end = DateTime.Now;
+            Console.WriteLine($"Done in {end - start}");
         }
     }
 }
